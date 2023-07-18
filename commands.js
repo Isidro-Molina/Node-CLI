@@ -1,30 +1,30 @@
-const request = require('request')
+const request = require('request');
 const fs = require('fs');
 
 module.exports = {
     pwd: function (args, done) {
-        let path = process.cwd()
+        let path = process.cwd();
         done(path);
     },
 
     date: function (args, done) {
-        let date = Date()
-        done(date)
+        let date = Date();
+        done(date);
     },
 
     ls: function (args, done) {
-        let result = ''
+        let result = '';
         fs.readdir('.', function (err, files) {
             if (err) throw err;
             files.forEach(function (file) {
-            result += file.toString() + '\n'
+                result += file.toString() + '\n';
             });
-            done(result)
+            done(result);
         });
     },
 
     echo: function (args, done) {
-        done(args)
+        done(args);
     },
 
     /* echo: function (parametros) {
@@ -36,8 +36,8 @@ module.exports = {
 
     cat: function (args, done) {
         fs.readFile(args, 'utf8', (err, data) => {
-            if (err) throw err
-            done(data)
+            if (err) throw err;
+            done(data);
         });
     },
 
@@ -49,7 +49,7 @@ module.exports = {
             }
             let text = data;
             let slicedText = text.split('\n').slice(0, 10).join('\n');
-            done(slicedText)
+            done(slicedText);
         });
     },
 
@@ -61,7 +61,7 @@ module.exports = {
             }
             let text = data;
             let slicedText = text.split('\n').slice(-10).join('\n');
-            done(slicedText)
+            done(slicedText);
         });
     },
 
@@ -74,7 +74,7 @@ module.exports = {
             let lines = data.split('\n');
             let sortedLines = lines.sort();
             let joined = sortedLines.join('\n');
-            done(joined)
+            done(joined);
         });
     },
 
@@ -88,13 +88,23 @@ module.exports = {
             done(lines.length);
         });
     },
-    uniq: function () { 
+    uniq: function () {
+        fs.readFile(args, 'utf8', (err, data) => {
+            if (err) {
+                console.log('Error en: ', err);
+                return;
+            }
+            let lines = data.split('\n');
+            let uniqLines = lines.filter(function (line, i, arr) {
+                return i === 0 || line !== arr[i-1]
+            })
+            done(uniqLines.join('\n'));
+        });
     },
 
     curl: function (args, done) {
-        request(args , function (err, res, body) {
-                done(body);
-        })
-    }
-    
+        request(args, function (err, res, body) {
+            done(body);
+        });
+    },
 };
