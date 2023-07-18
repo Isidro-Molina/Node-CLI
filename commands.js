@@ -2,32 +2,29 @@ const request = require('request')
 const fs = require('fs');
 
 module.exports = {
-    pwd: function (params,done) {
-        // let directorio = process.cwd()
-        // let output = process.stdout.write(directorio);
-        done(process.cwd());
-        // process.stdout.write('prompt >');
+    pwd: function (args, done) {
+        let path = process.cwd()
+        done(path);
     },
 
-    date: function (params, done) {
-        // console.log(new Date());
-        done(Date())
-        // process.stdout.write('prompt >');
+    date: function (args, done) {
+        let date = Date()
+        done(date)
     },
 
-    ls: function (params, done) {
+    ls: function (args, done) {
+        let result = ''
         fs.readdir('.', function (err, files) {
             if (err) throw err;
             files.forEach(function (file) {
-                // process.stdout.write(file.toString() + '\n')
-                done(file);
+            result += file.toString() + '\n'
             });
-            // process.stdout.write('prompt >');
+            done(result)
         });
     },
 
-    echo: function (str) {
-        console.log(str);
+    echo: function (args, done) {
+        done(args)
     },
 
     /* echo: function (parametros) {
@@ -37,42 +34,39 @@ module.exports = {
         process.stdout.write('prompt > ');
     }, */
 
-    cat: function (path) {
-        fs.readFile(path, 'utf8', (err, data) => {
-            if (err) {
-                console.log('Error en: ', err);
-                return;
-            }
-            console.log(data);
+    cat: function (args, done) {
+        fs.readFile(args, 'utf8', (err, data) => {
+            if (err) throw err
+            done(data)
         });
     },
 
-    head: function (path) {
-        fs.readFile(path, 'utf8', (err, data) => {
+    head: function (args, done) {
+        fs.readFile(args, 'utf8', (err, data) => {
             if (err) {
                 console.log('Error en: ', err);
                 return;
             }
             let text = data;
             let slicedText = text.split('\n').slice(0, 10).join('\n');
-            console.log(slicedText);
+            done(slicedText)
         });
     },
 
-    tail: function (path) {
-        fs.readFile(path, 'utf8', (err, data) => {
+    tail: function (args, done) {
+        fs.readFile(args, 'utf8', (err, data) => {
             if (err) {
                 console.log('Error en: ', err);
                 return;
             }
             let text = data;
             let slicedText = text.split('\n').slice(-10).join('\n');
-            console.log(slicedText);
+            done(slicedText)
         });
     },
 
-    sort: function (path) {
-        fs.readFile(path, 'utf8', (err, data) => {
+    sort: function (args, done) {
+        fs.readFile(args, 'utf8', (err, data) => {
             if (err) {
                 console.log('Error en: ', err);
                 return;
@@ -80,26 +74,26 @@ module.exports = {
             let lines = data.split('\n');
             let sortedLines = lines.sort();
             let joined = sortedLines.join('\n');
-            console.log(joined);
+            done(joined)
         });
     },
 
-    wc: function (path) {
-        fs.readFile(path, 'utf8', (err, data) => {
+    wc: function (args, done) {
+        fs.readFile(args, 'utf8', (err, data) => {
             if (err) {
                 console.log('Error en: ', err);
                 return;
             }
             let lines = data.split('\n');
-            console.log(lines.length);
+            done(lines.length);
         });
     },
     uniq: function () { 
     },
 
-    curl: function (url) {
-        request(url , function (err, res, body) {
-            console.log(body);
+    curl: function (args, done) {
+        request(args , function (err, res, body) {
+                done(body);
         })
     }
     
